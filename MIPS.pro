@@ -12,10 +12,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    image_preprocessing.cpp
+    imagepreprocessing.cpp
 
 HEADERS  += mainwindow.h \
-    image_preprocessing.h
+    imagepreprocessing.h
 
 FORMS    += mainwindow.ui
 

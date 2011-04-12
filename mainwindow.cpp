@@ -3,17 +3,17 @@
 #include <QScrollBar>
 #include <QImageReader>
 
-
 #include "MainWindow.h"
+#include "imagepreprocessing.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), scaleFactor(1)
 {
     setupUi(this);
 
-    image_preprocessing *ip = new image_preprocessing;
+    ImagePreprocessing *ip = new ImagePreprocessing();
 
-    QObject::connect(actionGauss,SIGNAL(triggered()),ip,SLOT(Gauss()));
+    QObject::connect(actionGauss,SIGNAL(triggered()),ip,SLOT(slotsGauss()));
 
 
     dirModel = new QDirModel(this);
@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     resize(780,580);
     currentFile = displayFiles.constBegin();
-    UpdateUI();
+    updateUi();
 }
 
 MainWindow::~MainWindow()
@@ -65,7 +65,7 @@ void MainWindow::scaleImage(double factor)
      adjustScrollBar(scrollArea->verticalScrollBar(), factor);
 }
 
-void MainWindow::DisplayImage(const QString &fileName)
+void MainWindow::displayImage(const QString &fileName)
 {
     QImage image(fileName);
     if (image.isNull()) {
@@ -77,7 +77,7 @@ void MainWindow::DisplayImage(const QString &fileName)
     scaleImage(1.0);
 }
 
-void MainWindow::UpdateUI()
+void MainWindow::updateUi()
 {
     if(currentFile == displayFiles.constEnd())
     {
@@ -102,19 +102,13 @@ void MainWindow::UpdateUI()
     actionZoomOut->setEnabled(scaleFactor > 0.333);
 }
 
-void MainWindow::resizeEvent(QResizeEvent *event)
-{
-    QRect childRect=scrollArea->childrenRect();
-    label->resize(childRect.size());
-}
-
 void MainWindow::on_actionForward_triggered()
 {
     currentFile++;
     if(currentFile == displayFiles.constEnd())
         currentFile = displayFiles.constBegin();
-    DisplayImage(dirCurrent->absoluteFilePath(*currentFile));
-    UpdateUI();
+    displayImage(dirCurrent->absoluteFilePath(*currentFile));
+    updateUi();
 }
 
 void MainWindow::on_actionBack_triggered()
@@ -122,27 +116,27 @@ void MainWindow::on_actionBack_triggered()
     if(currentFile == displayFiles.constBegin())
         currentFile = displayFiles.constEnd();
     currentFile--;
-    DisplayImage(dirCurrent->absoluteFilePath(*currentFile));
-    UpdateUI();
+    displayImage(dirCurrent->absoluteFilePath(*currentFile));
+    updateUi();
 }
 
 void MainWindow::on_actionZoomOut_triggered()
 {
     scaleImage(0.8);
-    UpdateUI();
+    updateUi();
 }
 
 void MainWindow::on_actionZoomIn_triggered()
 {
     scaleImage(1.25);
-    UpdateUI();
+    updateUi();
 }
 
 void MainWindow::on_actionActualSize_triggered()
 {
     scaleFactor = 1.0;
     scaleImage(1.0);
-    UpdateUI();
+    updateUi();
 }
 
 void MainWindow::on_treeView_clicked ( const QModelIndex &index )
@@ -152,8 +146,8 @@ void MainWindow::on_treeView_clicked ( const QModelIndex &index )
     displayFiles = dirCurrent->entryList(supportFormat, QDir::Files);
     currentFile = displayFiles.constBegin();
     if(currentFile != displayFiles.constEnd())
-        DisplayImage(dirCurrent->absoluteFilePath(*currentFile));
-    UpdateUI();
+        displayImage(dirCurrent->absoluteFilePath(*currentFile));
+    updateUi();
 }
 
 const char *htmlAboutText =
