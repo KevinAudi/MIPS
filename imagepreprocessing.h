@@ -2,20 +2,17 @@
 #define IMAGEPREPROCESSING_H
 
 #include <QWidget>
-#include <QImage>
+//#include <QImage>
 
 class ImagePreprocessing : public QWidget
 {
     Q_OBJECT
 public:
     explicit ImagePreprocessing(QWidget *parent = 0);
+    QImage image;
 
 public slots:
     void slotsGauss();
-
-private:
-    QImage image;
-
 };
 
 #endif // IMAGEPREPROCESSING_H

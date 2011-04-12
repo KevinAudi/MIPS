@@ -4,6 +4,7 @@
 #include <QScrollArea>
 
 #include "ui_MainWindow.h"
+#include "imagepreprocessing.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -30,9 +31,11 @@ private:
 
     QDirModel *dirModel;
     QLabel *imageInfo;
-    QDir *dirCurrent;
-    QStringList supportFormat;
+    QDir *currentDirectory;
+    QStringList supportedFormat;
     QStringList displayFiles;
     QStringList::const_iterator currentFile;
+   // QString currentFile;
     double scaleFactor;
+    ImagePreprocessing *ip;
 };

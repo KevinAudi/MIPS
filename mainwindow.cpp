@@ -6,25 +6,24 @@
 #include "MainWindow.h"
 #include "imagepreprocessing.h"
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), scaleFactor(1)
 {
     setupUi(this);
 
-    ImagePreprocessing *ip = new ImagePreprocessing();
+    ip = new ImagePreprocessing;
 
     QObject::connect(actionGauss,SIGNAL(triggered()),ip,SLOT(slotsGauss()));
 
-
     dirModel = new QDirModel(this);
-    dirModel->setFilter(QDir::Dirs | QDir::Drives| QDir::NoDotAndDotDot);
+    dirModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    dirCurrent = new QDir();
+    currentDirectory = new QDir();
 
     imageInfo = new QLabel(this);
     imageInfo->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     imageInfo->setAlignment(Qt::AlignCenter);
-    imageInfo->setStatusTip(tr("Display image infomation in the selected folder"));
 
     mainToolBar->addWidget(imageInfo);
 
@@ -34,19 +33,21 @@ MainWindow::MainWindow(QWidget *parent)
     treeView->setColumnHidden(2,true);  // Type
     treeView->setColumnHidden(3,true);  // Modified Date
 
-    foreach (QByteArray ba, QImageReader::supportedImageFormats())
+    foreach (QByteArray byteArray, QImageReader::supportedImageFormats())
     {
-        QString ext = QString("*.")+QString(ba);
-        supportFormat<<ext;
+        QString extra = QString("*.") + QString(byteArray);
+        supportedFormat << extra;
     }
-    resize(780,580);
-    currentFile = displayFiles.constBegin();
+
+    resize(800,600);
+    currentFile = displayFiles.constBegin();  
+
     updateUi();
 }
 
 MainWindow::~MainWindow()
 {
-    delete dirCurrent;
+    delete currentDirectory;
 }
 
 void adjustScrollBar(QScrollBar *scrollBar, double factor)
@@ -61,19 +62,19 @@ void MainWindow::scaleImage(double factor)
     scaleFactor *= factor;
     label->resize(scaleFactor * label->pixmap()->size());
 
-     adjustScrollBar(scrollArea->horizontalScrollBar(), factor);
-     adjustScrollBar(scrollArea->verticalScrollBar(), factor);
+    adjustScrollBar(scrollArea->horizontalScrollBar(), factor);
+    adjustScrollBar(scrollArea->verticalScrollBar(), factor);
 }
 
 void MainWindow::displayImage(const QString &fileName)
 {
-    QImage image(fileName);
-    if (image.isNull()) {
-        QMessageBox::information(this, tr("Image Viewer"),
+    QImage disImage(fileName);
+    if (disImage.isNull()) {
+        QMessageBox::information(this, tr("MIPS"),
                                  tr("Cannot load %1.").arg(fileName));
         return;
     }
-    label->setPixmap(QPixmap::fromImage(image));
+    label->setPixmap(QPixmap::fromImage(disImage));
     scaleImage(1.0);
 }
 
@@ -81,25 +82,27 @@ void MainWindow::updateUi()
 {
     if(currentFile == displayFiles.constEnd())
     {
-        imageInfo->setText(tr("No Images, Click TreeView to select pic folder"));
+        imageInfo->setText(tr("There Are No Images! Please Click TreeView to Select Image Folder!"));
         actionForward->setEnabled(false);
         actionBack->setEnabled(false);
         actionZoomIn->setEnabled(false);
         actionZoomOut->setEnabled(false);
         actionActualSize->setEnabled(false);
+        actionFitSize->setEnabled(false);
     }
     else
     {
         int i = displayFiles.indexOf(*currentFile, 0) + 1;	// non-Programmer count from 1 instead 0
         imageInfo->setText(QString(tr("%1/%2 %3 %4%")).arg(i).arg(displayFiles.size()).arg(*currentFile).arg(scaleFactor*100, 3));
         actionForward->setEnabled(true);
-        actionBack->setEnabled(true);
-        actionZoomIn->setEnabled(true);
-        actionZoomOut->setEnabled(true);
+        actionBack->setEnabled(true);        
         actionActualSize->setEnabled(true);
-    }
-    actionZoomIn->setEnabled(scaleFactor < 3.0);
-    actionZoomOut->setEnabled(scaleFactor > 0.333);
+        actionFitSize->setEnabled(true);
+        actionZoomIn->setEnabled(scaleFactor < 3.0);
+        actionZoomOut->setEnabled(scaleFactor > 0.333);
+
+        ip->image = QImage(currentDirectory->absoluteFilePath(*currentFile));
+    }    
 }
 
 void MainWindow::on_actionForward_triggered()
@@ -107,7 +110,7 @@ void MainWindow::on_actionForward_triggered()
     currentFile++;
     if(currentFile == displayFiles.constEnd())
         currentFile = displayFiles.constBegin();
-    displayImage(dirCurrent->absoluteFilePath(*currentFile));
+    displayImage(currentDirectory->absoluteFilePath(*currentFile));
     updateUi();
 }
 
@@ -116,7 +119,7 @@ void MainWindow::on_actionBack_triggered()
     if(currentFile == displayFiles.constBegin())
         currentFile = displayFiles.constEnd();
     currentFile--;
-    displayImage(dirCurrent->absoluteFilePath(*currentFile));
+    displayImage(currentDirectory->absoluteFilePath(*currentFile));
     updateUi();
 }
 
@@ -142,11 +145,11 @@ void MainWindow::on_actionActualSize_triggered()
 void MainWindow::on_treeView_clicked ( const QModelIndex &index )
 {
     const QString path = dirModel->data(index, QDirModel::FilePathRole).toString();
-    dirCurrent->setPath(path);
-    displayFiles = dirCurrent->entryList(supportFormat, QDir::Files);
+    currentDirectory->setPath(path);
+    displayFiles = currentDirectory->entryList(supportedFormat, QDir::Files);
     currentFile = displayFiles.constBegin();
     if(currentFile != displayFiles.constEnd())
-        displayImage(dirCurrent->absoluteFilePath(*currentFile));
+        displayImage(currentDirectory->absoluteFilePath(*currentFile));
     updateUi();
 }
 
