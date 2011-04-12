@@ -133,8 +133,8 @@ void ImagePreprocessing::slotsGauss()
                     blue = 255;
                 image.setPixel(i,j,qRgb(red,green,blue));
             }
-        label->setPixmap(QPixmap::fromImage(image));
-        scaleImage(1.0);
+        //label->setPixmap(QPixmap::fromImage(image));
+        //scaleImage(1.0);
         image.save("D:\\123.jpg");
        // this->update();
     }
