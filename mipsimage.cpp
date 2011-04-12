@@ -1,5 +1,5 @@
 #include "mipsimage.h"
 
-MipsImage::MipsImage()
+MipsImage::MipsImage() : QImage()
 {
 }
