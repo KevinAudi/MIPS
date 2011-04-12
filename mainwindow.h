@@ -21,6 +21,7 @@ private slots:
     void on_actionZoomIn_triggered();
     void on_actionActualSize_triggered();
     void on_actionAbout_triggered();
+    void hxImage();
 
     void on_treeView_clicked(const QModelIndex & index);    
 
@@ -28,6 +29,7 @@ private:
     void displayImage(const QString &fileName);
     void scaleImage(double factor);
     void updateUi();
+
 
     QDirModel *dirModel;
     QLabel *imageInfo;

@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     ip = new ImagePreprocessing;
 
     QObject::connect(actionGauss,SIGNAL(triggered()),ip,SLOT(slotsGauss()));
+    QObject::connect(actionGauss,SIGNAL(triggered()),this,SLOT(hxImage()));
 
     dirModel = new QDirModel(this);
     dirModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -54,7 +55,7 @@ void adjustScrollBar(QScrollBar *scrollBar, double factor)
 {
     scrollBar->setValue(int(factor * scrollBar->value()
                             + ((factor - 1) * scrollBar->pageStep()/2)));
-     }
+}
 
 void MainWindow::scaleImage(double factor)
 {
@@ -76,6 +77,16 @@ void MainWindow::displayImage(const QString &fileName)
     }
     label->setPixmap(QPixmap::fromImage(disImage));
     scaleImage(1.0);
+}
+
+void MainWindow::hxImage()
+{
+    if(ip->flag)
+    {
+        qDebug("flag == 1!");
+        label->setPixmap(QPixmap::fromImage(ip->image));
+        scaleImage(1.0);
+    }
 }
 
 void MainWindow::updateUi()
@@ -102,7 +113,7 @@ void MainWindow::updateUi()
         actionZoomOut->setEnabled(scaleFactor > 0.333);
 
         ip->image = QImage(currentDirectory->absoluteFilePath(*currentFile));
-    }    
+    }
 }
 
 void MainWindow::on_actionForward_triggered()

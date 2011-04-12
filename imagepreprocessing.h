@@ -10,6 +10,7 @@ class ImagePreprocessing : public QWidget
 public:
     explicit ImagePreprocessing(QWidget *parent = 0);
     QImage image;
+    int flag;
 
 public slots:
     void slotsGauss();

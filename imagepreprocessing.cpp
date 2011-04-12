@@ -3,11 +3,12 @@
 ImagePreprocessing::ImagePreprocessing(QWidget *parent) :
     QWidget(parent)
 {   
-     // image =  QImage("D:\\bitmap_22.bmp");
+     flag = 0;
   }
 
 void ImagePreprocessing::slotsGauss()
 {
+    flag = 1;
     if((image.format()==QImage::Format_Indexed8)&&(image.depth()==8))
     {
         int h = image.height();
@@ -135,6 +136,7 @@ void ImagePreprocessing::slotsGauss()
             }
         //label->setPixmap(QPixmap::fromImage(image));
         //scaleImage(1.0);
+
         image.save("D:\\123.jpg");
        // this->update();
     }
