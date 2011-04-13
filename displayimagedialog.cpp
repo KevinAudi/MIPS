@@ -3,22 +3,16 @@
 DisplayImageDialog::DisplayImageDialog(QImage image,QWidget *parent) :
         QDialog(parent)
 {
-  //  displayImageWidget = new QWidget;
 
-    displayLabel = new QLabel(this);
-    displayLabel->setBackgroundRole(QPalette::Base);
-    displayLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    //displayLabel->setScaledContents(true);
-
-    displayScrollArea = new QScrollArea(this);
-    //displayScrollArea->setBackgroundRole(QPalette::Dark);
-    displayScrollArea->setWidget(displayLabel);
-
-    hboxLayout = new QHBoxLayout;
-    hboxLayout->addWidget(displayScrollArea);
-    this->setLayout(hboxLayout);
-
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setWidgetResizable(true);
+    QWidget *scrollAreaWidgetContents = new QWidget();
+    QHBoxLayout *horizontalLayout = new QHBoxLayout(scrollAreaWidgetContents);
+    displayLabel = new QLabel(scrollAreaWidgetContents);
     displayLabel->setPixmap(QPixmap::fromImage(image));
-
-    //displayImageWidget->show();
+    horizontalLayout->addWidget(displayLabel);
+    scrollArea->setWidget(scrollAreaWidgetContents);
+    hboxLayout = new QHBoxLayout;
+    this->setLayout(hboxLayout);
+    hboxLayout->addWidget(scrollArea);
 }
