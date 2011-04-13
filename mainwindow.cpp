@@ -5,6 +5,7 @@
 
 #include "MainWindow.h"
 #include "imagepreprocessing.h"
+#include "displayimagedialog.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -13,9 +14,10 @@ MainWindow::MainWindow(QWidget *parent)
     setupUi(this);
 
     ip = new ImagePreprocessing;
+    dialog = new DisplayImageDialog;
 
-    QObject::connect(actionGauss,SIGNAL(triggered()),ip,SLOT(slotsGauss()));
-    QObject::connect(actionGauss,SIGNAL(triggered()),this,SLOT(hxImage()));
+    QObject::connect(actionGauss,SIGNAL(triggered()),this,SLOT(slotSmoothnessGauss()));
+  //  QObject::connect(actionGauss,SIGNAL(triggered()),this,SLOT(hxImage()));
 
     dirModel = new QDirModel(this);
     dirModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -79,16 +81,6 @@ void MainWindow::displayImage(const QString &fileName)
     scaleImage(1.0);
 }
 
-void MainWindow::hxImage()
-{
-    if(ip->flag)
-    {
-        qDebug("flag == 1!");
-        label->setPixmap(QPixmap::fromImage(ip->image));
-        scaleImage(1.0);
-    }
-}
-
 void MainWindow::updateUi()
 {
     if(currentFile == displayFiles.constEnd())
@@ -110,9 +102,7 @@ void MainWindow::updateUi()
         actionActualSize->setEnabled(true);
         actionFitSize->setEnabled(true);
         actionZoomIn->setEnabled(scaleFactor < 3.0);
-        actionZoomOut->setEnabled(scaleFactor > 0.333);
-
-        ip->image = QImage(currentDirectory->absoluteFilePath(*currentFile));
+        actionZoomOut->setEnabled(scaleFactor > 0.333);       
     }
 }
 
@@ -162,6 +152,13 @@ void MainWindow::on_treeView_clicked ( const QModelIndex &index )
     if(currentFile != displayFiles.constEnd())
         displayImage(currentDirectory->absoluteFilePath(*currentFile));
     updateUi();
+}
+
+void MainWindow::slotSmoothnessGauss()
+{
+    ip->processingImage = QImage(currentDirectory->absoluteFilePath(*currentFile));
+    ip->gauss(ip->processingImage);
+    dialog->DisplayImageDialog(ip->processedImage,this);
 }
 
 const char *htmlAboutText =

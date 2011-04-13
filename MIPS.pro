@@ -13,13 +13,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     imagepreprocessing.cpp \
-    mipsimage.cpp
+    mipsimage.cpp \
+    displayimagedialog.cpp
 
 HEADERS  += mainwindow.h \
     imagepreprocessing.h \
-    mipsimage.h
+    mipsimage.h \
+    displayimagedialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    mainwindow.ui
 
 RESOURCES += \
     src.qrc
