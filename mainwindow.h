@@ -4,6 +4,7 @@
 #include <QScrollArea>
 
 #include "ui_MainWindow.h"
+#include "imagepreprocessing.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -20,6 +21,7 @@ private slots:
     void on_actionZoomIn_triggered();
     void on_actionActualSize_triggered();
     void on_actionAbout_triggered();
+    void hxImage();
 
     void on_treeView_clicked(const QModelIndex & index);    
 
@@ -28,11 +30,14 @@ private:
     void scaleImage(double factor);
     void updateUi();
 
+
     QDirModel *dirModel;
     QLabel *imageInfo;
-    QDir *dirCurrent;
-    QStringList supportFormat;
+    QDir *currentDirectory;
+    QStringList supportedFormat;
     QStringList displayFiles;
     QStringList::const_iterator currentFile;
+   // QString currentFile;
     double scaleFactor;
+    ImagePreprocessing *ip;
 };

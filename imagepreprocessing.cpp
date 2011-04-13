@@ -1,17 +1,14 @@
 #include "imagepreprocessing.h"
 
-#include <QDesktopWidget>
-
 ImagePreprocessing::ImagePreprocessing(QWidget *parent) :
     QWidget(parent)
-{
-    //QDesktopWidget desktop;
-      image =  QImage("D:\\bitmap_22.bmp");
-    // image = QImage(desktop.width(),desktop.height(),QImage::Format_Indexed8);
-}
+{   
+     flag = 0;
+  }
 
 void ImagePreprocessing::slotsGauss()
 {
+    flag = 1;
     if((image.format()==QImage::Format_Indexed8)&&(image.depth()==8))
     {
         int h = image.height();
@@ -137,7 +134,10 @@ void ImagePreprocessing::slotsGauss()
                     blue = 255;
                 image.setPixel(i,j,qRgb(red,green,blue));
             }
-            image.save("D:\\gauss.bmp");
+        //label->setPixmap(QPixmap::fromImage(image));
+        //scaleImage(1.0);
+
+        image.save("D:\\123.jpg");
        // this->update();
     }
     else
