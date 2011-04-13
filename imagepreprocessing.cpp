@@ -1,10 +1,10 @@
 #include "imagepreprocessing.h"
-
+#include <QDebug>
 ImagePreprocessing::ImagePreprocessing(QWidget *parent) :
     QWidget(parent)
 {   
      flag = 0;
-  }
+}
 
 void ImagePreprocessing::slotsGauss()
 {
