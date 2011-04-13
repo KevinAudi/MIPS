@@ -5,6 +5,7 @@
 
 #include "ui_MainWindow.h"
 #include "imagepreprocessing.h"
+#include "displayimagedialog.h"
 
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -21,9 +22,10 @@ private slots:
     void on_actionZoomIn_triggered();
     void on_actionActualSize_triggered();
     void on_actionAbout_triggered();
-    void hxImage();
+    void on_treeView_clicked(const QModelIndex & index);
 
-    void on_treeView_clicked(const QModelIndex & index);    
+    void slotSmoothnessGauss();
+
 
 private:
     void displayImage(const QString &fileName);
@@ -37,7 +39,8 @@ private:
     QStringList supportedFormat;
     QStringList displayFiles;
     QStringList::const_iterator currentFile;
-   // QString currentFile;
+
     double scaleFactor;
     ImagePreprocessing *ip;
+    DisplayImageDialog *dialog;
 };
