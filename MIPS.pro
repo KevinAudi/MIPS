@@ -13,11 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     imagepreprocessing.cpp \
-    mipsimage.cpp
+    mipsimage.cpp \
+    mipsdisplaydialog.cpp
 
 HEADERS  += mainwindow.h \
     imagepreprocessing.h \
-    mipsimage.h
+    mipsimage.h \
+    mipsdisplaydialog.h
 
 FORMS    += mainwindow.ui
 

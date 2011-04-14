@@ -5,6 +5,7 @@
 
 #include "MainWindow.h"
 #include "imagepreprocessing.h"
+#include "mipsdisplaydialog.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -85,6 +86,9 @@ void MainWindow::hxImage()
     {
         qDebug("flag == 1!");
         label->setPixmap(QPixmap::fromImage(ip->image));
+        MipsDisplayDialog *dialog = new MipsDisplayDialog(ip->image, this);
+        dialog->exec();
+        delete dialog;
         scaleImage(1.0);
     }
 }
