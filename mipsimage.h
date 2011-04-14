@@ -3,15 +3,22 @@
 
 #include <QImage>
 #include <QVector>
+#include <QDebug>
 
 class MipsWeightMatrix
 {
 public:
     MipsWeightMatrix(int radius)
     {
-        width = 2 * radius + 1;
-        this->weights = QVector<double>(width  * width);
-        for (int i = 0; i < width * width; i++)
+        width = 1;
+        power = 0;
+        while (width < 2 * radius + 1)
+        {
+            width <<= 1;
+            power++;
+        }
+        this->weights = QVector<double>(width  * (2 * radius + 1));
+        for (int i = 0; i < width * (2 * radius + 1); i++)
         {
             weights[i] = 0;
         }
@@ -20,12 +27,12 @@ public:
 
     double weightAt(int x, int y)
     {
-        return weights[x * width + y];
+        return weights[(x << power) | y];
     }
 
-    void setWidgetAt(int x, int y, double value)
+    void setWeightAt(int x, int y, double value)
     {
-        weights[x * width + y] = value;
+        weights[(x << power) | y] = value;
     }
 
     int getRadius()
@@ -36,6 +43,7 @@ public:
 private:
     int radius;
     int width;
+    int power;
     QVector<double> weights;
 };
 

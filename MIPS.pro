@@ -14,14 +14,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     imagepreprocessing.cpp \
     mipsimage.cpp \
-    mipsdisplaydialog.cpp
+    displayimagedialog.cpp
 
 HEADERS  += mainwindow.h \
     imagepreprocessing.h \
     mipsimage.h \
-    mipsdisplaydialog.h
+    displayimagedialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    mainwindow.ui
 
 RESOURCES += \
     src.qrc
